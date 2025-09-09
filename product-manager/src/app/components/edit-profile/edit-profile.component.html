@@ -1,0 +1,52 @@
+<app-product-layout></app-product-layout>
+<div class="container d-flex justify-content-center mt-5">
+  <div class="card shadow-lg p-4 w-100" style="max-width: 500px; border-radius: 15px;">
+    
+    <!-- Title -->
+    <h2 class="text-center mb-4 text-primary fw-bold">Edit Profile</h2>
+
+    <!-- Image Preview -->
+    <div *ngIf="imagePreview" class="text-center mb-3">
+      <img
+        [src]="imagePreview"
+        alt="Profile Image Preview"
+        class="profile-preview"
+      />
+      <p class="mt-2 text-muted">Profile Picture Preview</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">Username</label>
+        <input
+          type="text"
+          id="username"
+          class="form-control"
+          formControlName="username"
+          placeholder="Enter your username"
+        />
+      </div>
+
+      <!-- Profile Image -->
+      <div class="mb-3">
+        <label for="image" class="form-label fw-semibold">Profile Image</label>
+        <input
+          type="file"
+          id="image"
+          class="form-control"
+          (change)="onFileSelected($event)"
+        />
+      </div>
+
+      <!-- Save Button -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary btn-lg">
+          <i class="bi bi-save me-2"></i> Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>  

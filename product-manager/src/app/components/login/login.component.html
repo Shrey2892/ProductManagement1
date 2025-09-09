@@ -1,0 +1,80 @@
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; width: 100%;">
+    
+    <h2 class="text-center fw-bold mb-4 text-primary">Login</h2>
+    
+    <form (ngSubmit)="login()" #loginForm="ngForm" novalidate>
+      
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">Username</label>
+        <input 
+          id="username"
+          name="username"
+          [(ngModel)]="username" 
+          required
+          class="form-control rounded-3 shadow-sm"
+          placeholder="Enter your username"
+          #usernameInput="ngModel"
+        />
+        <div *ngIf="usernameInput.invalid && usernameInput.touched" class="text-danger small mt-1">
+          Username is required.
+        </div>
+      </div>
+
+      
+
+      <!-- Password -->
+<div class="mb-3 position-relative">
+  <label for="password" class="form-label fw-semibold">Password</label>
+  <div class="input-group">
+    <input 
+      id="password"
+      [type]="showPassword ? 'text' : 'password'"
+      name="password"
+      [(ngModel)]="password"
+      required
+      class="form-control rounded-start-3 shadow-sm"
+      placeholder="Enter your password"
+      #passwordInput="ngModel"
+    />
+    <button 
+      type="button" 
+      class="btn btn-outline-secondary rounded-end-3 shadow-sm"
+      (click)="togglePassword()"
+      tabindex="-1"
+    >
+      <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+    </button>
+  </div>
+  <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger small mt-1">
+    Password is required.
+  </div>
+</div>
+
+
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="btn btn-primary w-100 py-2 fw-semibold rounded-3 shadow-sm"
+        [disabled]="loginForm.invalid"
+      >
+        Login
+      </button>
+    </form>
+
+    <!-- Register link -->
+    <p class="mt-4 text-center mb-0">
+      <span class="text-muted">Don't have an account?</span>
+      <a routerLink="/register" class="fw-semibold text-decoration-none text-primary">
+        Register here
+      </a>
+    </p>
+    <p class="mt-4 text-center mb-0">
+      <span class="text-muted">Forgot Password?</span>
+      <a routerLink="/forgot-password" class="fw-semibold text-decoration-none text-primary">
+        Reset  Password
+      </a>
+    </p>
+  </div>
+</div>

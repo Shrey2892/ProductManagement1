@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+  <div class="container-fluid">
+
+    
+    <a class="navbar-brand fw-bold" routerLink="/">
+      <i class="bi bi-box-seam me-1"></i> ProdigyHub
+    </a>
+
+    <ul class="navbar-nav ms-auto">
+      <li class="nav-item dropdown" *ngIf="user">
+        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button"
+           data-bs-toggle="dropdown" aria-expanded="false">
+          <ng-container *ngIf="avatarUrl; else defaultAvatar">
+            <img
+              [src]="avatarUrl"
+              [alt]="user.username + ' avatar'"
+              class="rounded-circle border border-white me-2 profile-avatar"
+              style="width: 32px; height: 32px; object-fit: cover;"
+            />
+          </ng-container>
+          <ng-template #defaultAvatar>
+            <div
+              class="rounded-circle bg-light text-primary d-flex justify-content-center align-items-center border border-white me-2 profile-avatar"
+              style="width: 32px; height: 32px; font-weight: 600; font-size: 1rem; user-select: none;">
+              {{ user.username.charAt(0) | uppercase }}
+            </div>
+          </ng-template>
+          {{ user.username }}
+        </a>
+        <!-- <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userDropdown"> -->
+           <ul class="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userDropdown">
+          <li class="px-3 py-2">
+            <span class="fw-semibold">{{ user.role }}</span>
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <button class="dropdown-item" (click)="goToEditProfile()">Edit Profile</button>
+          </li>
+          <li>
+            <button class="dropdown-item text-danger" (click)="logout()">Logout</button>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+  </div>
+</nav>
+<router-outlet></router-outlet>
+
+

@@ -1,0 +1,158 @@
+<div class="container d-flex justify-content-center align-items-center mt-5">
+  <div class="card shadow-lg border-0 p-4 w-100" style="max-width: 450px; border-radius: 15px;">
+    
+    <!-- Title -->
+    <h2 class="text-center mb-4 text-success fw-bold">
+      <i class="bi bi-person-plus me-2"></i> Register
+    </h2>
+
+    <!-- Form -->
+    <form (ngSubmit)="register()" #form="ngForm" novalidate>
+      
+      <!-- Username -->
+      <div class="mb-3">
+        <label for="username" class="form-label fw-semibold">Username</label>
+        <input 
+          id="username" 
+          name="username" 
+          [(ngModel)]="username" 
+          required 
+          class="form-control form-control-lg"
+          placeholder="Enter your username"
+          #usernameInput="ngModel"
+        />
+        <div *ngIf="usernameInput.invalid && usernameInput.touched" class="text-danger small mt-1">
+          <i class="bi bi-exclamation-circle me-1"></i> Username is required.
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label fw-semibold">Email</label>
+        <input 
+          id="email" 
+          name="email" 
+          [(ngModel)]="email" 
+          required 
+          type="email"
+          class="form-control form-control-lg"
+          placeholder="Enter your email"
+          #emailInput="ngModel"
+        />
+        <div *ngIf="emailInput.invalid && emailInput.touched" class="text-danger small mt-1">
+          <i class="bi bi-envelope-exclamation me-1"></i> Valid email is required.
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3 position-relative">
+        <label for="password" class="form-label fw-semibold">Password</label>
+        <div class="input-group">
+          <input 
+            id="password" 
+            [type]="showPassword ? 'text' : 'password'" 
+            name="password" 
+            [(ngModel)]="password" 
+            required 
+            class="form-control form-control-lg rounded-start-3"
+            placeholder="Enter your password"
+            #passwordInput="ngModel"
+            (input)="validatePassword(password)"
+          />
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary rounded-end-3"
+            (click)="togglePassword()" 
+            tabindex="-1"
+          >
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger small mt-1">
+          <i class="bi bi-lock me-1"></i> Password is required.
+        </div>
+
+        <!-- Inline Password Strength Message -->
+        <div *ngIf="passwordError" class="text-danger small mt-1">
+          <i class="bi bi-shield-lock me-1"></i> {{ passwordError }}
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="mb-3 position-relative">
+        <label for="confirmPassword" class="form-label fw-semibold">Confirm Password</label>
+        <div class="input-group">
+          <input 
+            id="confirmPassword" 
+            [type]="showConfirmPassword ? 'text' : 'password'" 
+            name="confirmPassword" 
+            [(ngModel)]="confirmPassword" 
+            required 
+            class="form-control form-control-lg rounded-start-3"
+            placeholder="Re-enter your password"
+            #confirmPasswordInput="ngModel"
+          />
+          <button 
+            type="button" 
+            class="btn btn-outline-secondary rounded-end-3"
+            (click)="toggleConfirmPassword()" 
+            tabindex="-1"
+          >
+            <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div *ngIf="confirmPasswordInput.invalid && confirmPasswordInput.touched" class="text-danger small mt-1">
+          <i class="bi bi-shield-lock me-1"></i> Confirm password is required.
+        </div>
+        <div *ngIf="passwordMismatch && form.submitted" class="text-danger small mt-1">
+          <i class="bi bi-x-circle me-1"></i> Passwords do not match.
+        </div>
+      </div>
+
+      <!-- Role Selection -->
+      <div class="mb-3">
+        <label for="role" class="form-label fw-semibold">Select Role</label>
+        <select 
+          id="role" 
+          name="role" 
+          [(ngModel)]="role" 
+          class="form-select form-select-lg"
+          required
+        >
+          <option value="User">User</option>
+          <option value="Admin">Admin</option>
+        </select>
+      </div>
+
+      <!-- Profile Image -->
+      <div class="mb-3">
+        <label for="profileImage" class="form-label fw-semibold">Profile Image</label>
+        <input 
+          type="file" 
+          id="profileImage" 
+          (change)="onFileSelected($event)" 
+          accept="image/*"
+          class="form-control form-control-lg"
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <div class="d-grid">
+        <button 
+          type="submit" 
+          class="btn btn-success btn-lg shadow-sm"
+          [disabled]="isSubmitting || form.invalid"
+        >
+          <i class="bi bi-check-circle me-2"></i>
+          {{ isSubmitting ? 'Registering...' : 'Register' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- Login Redirect -->
+    <p class="mt-4 text-center text-muted">
+      Already have an account?
+      <a routerLink="/login" class="fw-semibold text-decoration-none">Login here</a>
+    </p>
+  </div>
+</div>

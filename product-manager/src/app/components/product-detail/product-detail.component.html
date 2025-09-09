@@ -1,0 +1,50 @@
+<app-product-layout></app-product-layout>
+<div class="main d-flex justify-content-center align-items-center mt-4">
+  <div class="card shadow-lg border-0 rounded-4" style="max-width: 600px; width: 100%;" *ngIf="product">
+    <div class="card-header bg-primary text-white rounded-top-4">
+      <h4 class="mb-0 text-center fw-bold">📦 Product Details</h4>
+    </div>
+    <div class="card-body text-center p-4">
+
+      <div *ngIf="product.imageUrl" class="mb-4">
+        <img [src]="product.imageUrl" 
+             alt="{{ product.name }}" 
+             class="img-fluid rounded shadow-sm" 
+             style="max-height: 220px; object-fit: contain;" />
+      </div>
+
+      <ul class="list-group list-group-flush text-start">
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">Name:</strong>
+          <span>{{ product.name }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">Description:</strong>
+          <span>{{ product.description || '-' }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">Price:</strong>
+          <span class="text-success fw-bold">Rs.{{ product.price }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">Stock Quantity:</strong>
+          <span>{{ product.stockQuantity }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">SKU:</strong>
+          <span>{{ product.sku || '-' }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">Category:</strong>
+          <span>{{ product.category || '-' }}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between">
+          <strong class="text-secondary">Active:</strong>
+          <span [ngClass]="product.isActive ? 'text-success fw-bold' : 'text-danger fw-bold'">
+            {{ product.isActive ? 'Yes' : 'No' }}
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
