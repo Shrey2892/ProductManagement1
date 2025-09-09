@@ -1,0 +1,26 @@
+<app-product-layout></app-product-layout>
+
+<div class="container mt-5" style="max-width: 450px;">
+  <h3 class="mb-3 text-center">Add User</h3>
+
+  <!-- Username -->
+  <div class="form-group mb-2">
+    <input type="text" [(ngModel)]="username" placeholder="Username" class="form-control">
+  </div>
+
+  <!-- Email -->
+  <div class="form-group mb-2">
+    <input type="email" [(ngModel)]="email" placeholder="Email" class="form-control">
+  </div>
+
+  <!-- Role (hidden, always User) -->
+  <div class="form-group mb-2">
+    <input type="hidden" [(ngModel)]="role" [value]="'User'" />
+    <input type="text" class="form-control" value="User" disabled />
+  </div>
+
+  <!-- Submit Button -->
+  <button (click)="addUser()" [disabled]="isSubmitting" class="btn btn-success w-100">
+    {{ isSubmitting ? 'Adding...' : 'Add User' }}
+  </button>
+</div>

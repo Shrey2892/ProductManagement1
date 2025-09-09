@@ -1,0 +1,84 @@
+<app-product-layout></app-product-layout>
+
+<div class="container my-5">
+  <!-- Error message -->
+  <div *ngIf="error" class="alert alert-danger text-center py-3 fw-bold rounded-3 shadow-sm">
+    {{ error }}
+  </div>
+
+  <!-- Loading spinner -->
+  <div *ngIf="loading && !error" class="d-flex flex-column align-items-center justify-content-center my-5">
+    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-3 text-muted fs-5">Fetching users...</p>
+  </div>
+
+  <!-- Users list -->
+  <div *ngIf="!loading && !error && users.length > 0">
+    <h2 class="mb-4 text-center fw-bold text-primary">
+      <i class="bi bi-people-fill me-2"></i> Registered Users
+    </h2>
+
+    <div class="row g-4">
+      <div class="col-sm-6 col-md-4 col-lg-3" *ngFor="let user of users">
+        <div class="card user-card shadow-sm border-0 h-100 p-3 text-center rounded-4">
+          <!-- Profile image -->
+          <div class="position-relative mx-auto mb-3">
+            <img *ngIf="getImageUrl(user); else noImage"
+                 [src]="getImageUrl(user)"
+                 alt="{{ user.username }}"
+                 class="rounded-circle shadow-sm border border-3 border-light"
+                 width="120" height="120"
+                 style="object-fit: cover;">
+
+            <ng-template #noImage>
+              <div class="bg-light text-secondary d-flex align-items-center justify-content-center rounded-circle shadow-sm border border-2 mx-auto"
+                   style="width:120px; height:120px; font-size:2.5rem;">
+                <i class="bi bi-person"></i>
+              </div>
+            </ng-template>
+          </div>
+
+          <!-- Username and role -->
+          <h5 class="fw-bold mb-1">{{ user.username }}</h5>
+          <span class="badge bg-primary px-3 py-2 rounded-pill">{{ user.role }}</span>
+
+          <!-- Restrict / Unrestrict button (only for Admins) -->
+          <div class="card-footer bg-transparent border-0 mt-3" *ngIf="authService.isAdmin() && user.role !== 'Admin'">
+            <button 
+              class="btn btn-sm w-100"
+              [ngClass]="user.isRestricted ? 'btn-success' : 'btn-danger'"
+              (click)="toggleRestriction(user)">
+              <i class="bi" [ngClass]="user.isRestricted ? 'bi-unlock' : 'bi-lock'"></i>
+              {{ user.isRestricted ? 'Unrestrict' : 'Restrict' }}
+            </button>
+
+             <!-- <button 
+      class="btn btn-sm" 
+      [ngClass]="user.isApproved ? 'btn-danger' : 'btn-success'" 
+      (click)="toggleApproval(user)">
+      {{ user.isApproved ? 'Unapprove' : 'Approve' }}
+    </button> -->
+
+    <button 
+    *ngIf="!user.isApproved"
+    class="btn btn-sm btn-success w-100"
+    (click)="approveUser(user)">
+    <i class="bi bi-check-circle"></i> Approve
+  </button>
+  <hr>
+  <span *ngIf="user.isApproved" class="badge bg-success px-3 py-2 rounded-pill">
+    ✅ Approved
+  </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No users found -->
+  <div *ngIf="!loading && !error && users.length === 0" class="alert alert-info text-center py-3 rounded-3 shadow-sm">
+    <i class="bi bi-info-circle me-2"></i> No users found.
+  </div>
+</div>

@@ -1,0 +1,102 @@
+.header {
+  display: flex;
+  justify-content: space-between; /* better than large gap */
+  align-items: center;
+  padding: 25px;
+}
+
+.main {
+  padding: 25px;
+}
+
+.btn-group.btn-group-sm {
+  margin-right: 10px;
+}
+
+
+.btn-group.btn-group-sm > .btn {
+  margin-right: 8px;
+}
+
+.btn-group.btn-group-sm > .btn:last-child {
+  margin-right: 0; /* Remove margin from the last button */
+}
+
+#logout{
+    margin-top:200px;
+    margin-left:1350px;
+}
+
+
+.custom-card-width {
+  max-width: 400px;
+  margin: 0 auto; /* center the card */
+}
+
+
+.search-input {
+  max-width: 300px;  /* or whatever width you prefer */
+  width: 100%;
+}
+
+
+/* Improve cart badge visibility */
+.cart-badge {
+  font-size: 0.75rem;      /* smaller text */
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  padding: 0 5px;
+  border: 2px solid #fff;  /* white border for separation */
+  transform: translate(-50%, 30%); 
+
+}
+
+/* Hover effect for cart link */
+.nav-link .bi-cart3 {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.nav-link:hover .bi-cart3 {
+  transform: scale(1.1);
+  color: #ffc107; /* yellow highlight on hover */
+}
+
+
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.profile-avatar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+
+.opacity-50 {
+  opacity: 0.5;
+}
+.pointer-events-none {
+  pointer-events: none;
+}
+
+
+.dropdown-menu {
+  position: absolute !important;
+}
+
+/* On very small screens, ensure it doesn’t overflow */
+@media (max-width: 576px) {
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    margin-top: 0.5rem; /* small gap below avatar */
+  }
+}

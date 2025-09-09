@@ -1,0 +1,26 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+/* ✅ Prevent dropdown from being clipped inside navbar on small screens */
+/* Prevent clipping inside navbar, but keep natural Bootstrap positioning */
+.dropdown-menu {
+  position: absolute !important;
+}
+
+/* On very small screens, ensure it doesn’t overflow */
+@media (max-width: 576px) {
+  .dropdown-menu {
+    right: 0;
+    left: auto;
+    margin-top: 0.5rem; /* small gap below avatar */
+  }
+}
+
+
