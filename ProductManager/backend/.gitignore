@@ -1,0 +1,12 @@
+# .NET build artifacts
+bin/
+obj/
+*.exe
+*.dll
+*.pdb
+*.log
+
+# VS files
+.vs/
+*.user
+*.suo
