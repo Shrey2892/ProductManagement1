@@ -1,48 +1,151 @@
-/* .main{
-    padding:25px;
-} */
- /* Image */
+:host{
+  display: block;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #222;
+}
+
+/* card wrapper (scoped to component) */
+.container.my-5{
+  background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(16,24,40,0.03);
+}
+
+/* Image */
 .neutral-image {
   width: 100%;
-  max-width: 380px;
-  height: 480px;
+  max-width: 420px;
+  height: 420px;
   object-fit: cover;
-  border-radius: 14px;
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 20px 40px rgba(16,24,40,0.12);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  background: linear-gradient(135deg, #f6f8ff, #ffffff);
+  border: 1px solid rgba(16,24,40,0.04);
 }
 
-/* Price */
-.price-neutral {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #198754;
+.neutral-image:hover{
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 28px 60px rgba(16,24,40,0.16);
 }
 
-/* Description */
-.description-neutral {
+/* Typography */
+h2{
+  font-size: 1.75rem;
+  line-height: 1.05;
+  margin: .15rem 0 .65rem 0;
+}
+
+.price-neutral{
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #0f5132; /* deep green */
+  margin-bottom: .5rem;
+}
+
+.description-neutral{
   font-size: 1rem;
   line-height: 1.6;
-  color: #444;
+  color: #4b5563;
+  margin-bottom: 1rem;
 }
 
-/* Info Grid */
-.info-grid {
-  display: flex;
-  gap: 40px;
+/* Badges */
+.badge{
+  font-weight: 600;
+  padding: .45em .55em;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(2,6,23,0.06) inset;
 }
 
-.info-grid div {
+/* Info Grid - responsive */
+.info-grid{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap: 18px 36px;
+  margin-top: 12px;
+}
+
+.info-grid div{
   display: flex;
   flex-direction: column;
 }
 
-.label {
-  font-size: 0.75rem;
-  color: #6c757d;
+.label{
+  font-size: .7rem;
+  color: #6b7280;
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.value {
-  font-size: 0.95rem;
-  font-weight: 600;
+.value{
+  font-size: .98rem;
+  font-weight: 700;
+  color: #111827;
+  margin-top: 6px;
 }
+
+/* subtle divider */
+hr{border: none; height:1px; background: linear-gradient(90deg, rgba(0,0,0,0.05), rgba(0,0,0,0.03)); margin:1.25rem 0}
+
+/* responsive adjustments */
+@media (max-width: 900px){
+  .container.my-5{ padding:18px }
+  .neutral-image{ max-width: 360px; height:360px }
+  .price-neutral{ font-size:1.8rem }
+}
+
+@media (max-width: 576px){
+  .row.g-5{ gap:1.5rem }
+  .neutral-image{ height:260px; max-width:100% }
+  .info-grid{ grid-template-columns: 1fr }
+  h2{ font-size:1.2rem }
+  .price-neutral{ font-size:1.4rem }
+}
+
+/* Utility: action buttons if added later */
+.actions{ display:flex; gap:12px; margin-top:18px }
+.btn-primary-cta{ background: linear-gradient(90deg,#0066ff,#0052cc); color:#fff; padding:.65rem 1rem; border-radius:10px; border:none; font-weight:700; box-shadow:0 10px 30px rgba(3,102,214,0.16) }
+.btn-outline{ background:transparent; border:1px solid rgba(16,24,40,0.06); padding:.6rem .9rem; border-radius:10px }
+
+/* end */
+
+/* Breadcrumbs */
+.breadcrumb a{ color: #0d6efd; text-decoration: none }
+.breadcrumb .active{ color: #374151 }
+
+/* Rating stars */
+.rating-stars .bi{ font-size: 1rem }
+
+/* Thumbnail gallery under main image */
+.thumbnail-list{ display:flex; gap:10px; margin-top:12px; justify-content:center }
+.thumbnail-list .thumb{ width:64px; height:64px; object-fit:cover; border-radius:8px; cursor:pointer; border:2px solid transparent }
+.thumbnail-list .thumb:hover{ transform: translateY(-4px); border-color: rgba(0,0,0,0.06) }
+
+/* Quantity control */
+.qty-control{ gap:8px }
+.qty-input{ width:72px; max-width:100px }
+
+/* Reviews */
+section .border{ background:#fff }
+
+/* Sticky CTA on small screens */
+.sticky-cta{ position: sticky; bottom: 18px; display:flex; gap:10px; justify-content:center }
+
+/* Reviews */
+.display-average{ display:flex; align-items:center; gap:10px }
+.display-average .h2{ font-size:1.6rem; margin:0 }
+.review-list .review-item{ background: #fff }
+.review-item strong{ font-size: .95rem }
+.review-item .small{ color: #4b5563 }
+
+/* Review form styles */
+.card.p-3{ border-radius: 10px }
+.form-label.small{ font-weight:600 }
+
+/* Reviews column */
+.reviews-column .card{ position: sticky; top: 90px }
+.reviews-column .review-list{ max-height: 52vh; overflow: auto; padding-right: 6px }
+
