@@ -185,23 +185,70 @@ export class CartComponent implements OnInit {
 
 
 
+// checkoutSelected() {
+//   if (this.selectedItems.length === 0) return;
+
+//   this.checkoutInProgress = true;
+
+//   // Keep a copy of unselected items
+//   const unselectedItems = this.cartItems.filter(
+//     item => !this.selectedItems.includes(item.productId)
+//   );
+
+//   // Temporarily set cart to only selected items (so backend checks them out)
+//   const originalCart = [...this.cartItems];
+//   this.cartItems = this.cartItems.filter(item =>
+//     this.selectedItems.includes(item.productId)
+//   );
+
+//   this.cartItemService.checkout().subscribe({
+//     next: () => {
+//       Swal.fire({
+//         title: 'Checkout Successful!',
+//         text: 'Your selected items have been checked out successfully.',
+//         icon: 'success',
+//         confirmButtonText: 'OK',
+//         confirmButtonColor: '#3085d6'
+//       }).then(() => {
+//         // Restore cart to only unselected items
+//         this.cartItems = unselectedItems;
+//         this.selectedItems = [];
+//         this.checkoutInProgress = false;
+//       });
+//     },
+//     error: (err) => {
+//       // Restore full cart if checkout fails
+//       this.cartItems = originalCart;
+
+//       const errorMsg = err.error?.message || err.error || 'Unknown error';
+//       Swal.fire({
+//         title: 'Checkout Failed',
+//         text: errorMsg,
+//         icon: 'error',
+//         confirmButtonText: 'OK',
+//         confirmButtonColor: '#d33'
+//       });
+//       this.checkoutInProgress = false;
+//     }
+//   });
+// }
+
+// cart.component.ts
 checkoutSelected() {
-  if (this.selectedItems.length === 0) return;
+  if (this.selectedItems.length === 0) {
+    Swal.fire({
+      title: 'No Items Selected',
+      text: 'Please select items to checkout.',
+      icon: 'warning',
+      confirmButtonText: 'OK'
+    });
+    return;
+  }
 
   this.checkoutInProgress = true;
 
-  // Keep a copy of unselected items
-  const unselectedItems = this.cartItems.filter(
-    item => !this.selectedItems.includes(item.productId)
-  );
-
-  // Temporarily set cart to only selected items (so backend checks them out)
-  const originalCart = [...this.cartItems];
-  this.cartItems = this.cartItems.filter(item =>
-    this.selectedItems.includes(item.productId)
-  );
-
-  this.cartItemService.checkout().subscribe({
+  // Don't modify cartItems array, just send selected IDs to backend
+  this.cartItemService.checkoutSelected(this.selectedItems).subscribe({
     next: () => {
       Swal.fire({
         title: 'Checkout Successful!',
@@ -210,16 +257,15 @@ checkoutSelected() {
         confirmButtonText: 'OK',
         confirmButtonColor: '#3085d6'
       }).then(() => {
-        // Restore cart to only unselected items
-        this.cartItems = unselectedItems;
+        // Remove only the selected items from the cart
+        this.cartItems = this.cartItems.filter(
+          item => !this.selectedItems.includes(item.productId)
+        );
         this.selectedItems = [];
         this.checkoutInProgress = false;
       });
     },
     error: (err) => {
-      // Restore full cart if checkout fails
-      this.cartItems = originalCart;
-
       const errorMsg = err.error?.message || err.error || 'Unknown error';
       Swal.fire({
         title: 'Checkout Failed',

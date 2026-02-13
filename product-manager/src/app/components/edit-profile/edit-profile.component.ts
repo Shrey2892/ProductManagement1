@@ -33,7 +33,7 @@ export class EditProfileComponent implements OnInit {
         });
 
         if (user.imagePath) {
-          this.imagePreview = `http://localhost:5237/${user.imagePath}`;
+          this.imagePreview = `http://localhost:5259/${user.imagePath}`;
         }
       },
       error: (err) => {
@@ -82,7 +82,7 @@ export class EditProfileComponent implements OnInit {
 
         // If only profile image updated
         if (res.imagePath) {
-          this.imagePreview = `http://localhost:5237${res.imagePath}`;
+          this.imagePreview = `http://localhost:5259${res.imagePath}`;
         }
         this.user = res;
 

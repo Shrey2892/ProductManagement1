@@ -9,7 +9,7 @@ import { CartItem } from '../models/CartItem';
   providedIn: 'root'
 })
 export class CartItemService {
-  private apiUrl = 'http://localhost:5237/api/Cart'; // ✅ your cart controller base URL
+  private apiUrl = 'http://localhost:5259/api/Cart'; // ✅ your cart controller base URL
 
   constructor(private http: HttpClient) {}
 
@@ -40,7 +40,7 @@ export class CartItemService {
 removeFromCart(productId: number) {
   const headers = this.getAuthHeaders().headers;  // extract headers from your existing method
   return this.http.delete(
-    `http://localhost:5237/api/Cart/remove/${productId}`,
+    `http://localhost:5259/api/Cart/remove/${productId}`,
     { headers, responseType: 'text' }
   );
 }
@@ -94,8 +94,16 @@ checkout(): Observable<any> {
 }
 
 
+// checkoutSelected(productIds: number[]): Observable<any> {
+//   return this.http.post(`${this.apiUrl}/checkout-selected`, productIds, this.getAuthHeaders());
+// }
+// cartitem.service.ts
+
 checkoutSelected(productIds: number[]): Observable<any> {
-  return this.http.post(`${this.apiUrl}/checkout-selected`, productIds, this.getAuthHeaders());
+  // Wrap the array in an object with productIds property
+  const payload = { productIds: productIds };
+  
+  return this.http.post(`${this.apiUrl}/checkout-selected`, payload);
 }
 
 

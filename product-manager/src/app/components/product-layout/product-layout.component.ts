@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { WishlistService } from '../../services/wishlist.service';
-import { CartService } from '../../services/cart.service';
+import { CartItemService } from '../../services/cartitem.service';
 import Swal from 'sweetalert2';
 import { FooterComponent } from '../footer/footer.component';
 @Component({
@@ -23,13 +23,13 @@ export class ProductLayoutComponent {
     products: Product[] = [];
     
      user?: User;
-    backendBaseUrl = 'http://localhost:5237'; 
+    backendBaseUrl = 'http://localhost:5259/'; 
     constructor(
     private service: ProductService,
     private router: Router,
     private userService: AuthService, 
     private wishlistService:WishlistService,
-    private cartService:CartService
+    private cartService:CartItemService
   ) {}
 
 

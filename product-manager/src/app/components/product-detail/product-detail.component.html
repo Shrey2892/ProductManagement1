@@ -1,4 +1,4 @@
-<app-product-layout></app-product-layout>
+<!-- <app-product-layout></app-product-layout>
 <div class="main d-flex justify-content-center align-items-center mt-4">
   <div class="card shadow-lg border-0 rounded-4" style="max-width: 600px; width: 100%;" *ngIf="product">
     <div class="card-header bg-primary text-white rounded-top-4">
@@ -45,6 +45,68 @@
           </span>
         </li>
       </ul>
+    </div>
+  </div>
+</div> -->
+<app-product-layout></app-product-layout>
+
+<div class="container my-5" *ngIf="product">
+  <div class="row g-5 align-items-start">
+
+    <!-- LEFT: Product Image -->
+    <div class="col-md-5 text-center">
+      <img
+        [src]="product.imageUrl"
+        [alt]="product.name"
+        class="neutral-image"
+      />
+    </div>
+
+    <!-- RIGHT: Product Information -->
+    <div class="col-md-7">
+
+      <!-- Product Name -->
+      <h2 class="fw-bold mb-2">{{ product.name }}</h2>
+
+      <!-- Category & Status -->
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <span class="text-muted small">
+          Category: <strong>{{ product.category }}</strong>
+        </span>
+
+        <span
+          class="badge"
+          [ngClass]="product.isActive ? 'bg-success' : 'bg-danger'"
+        >
+          {{ product.isActive ? 'Active' : 'Inactive' }}
+        </span>
+      </div>
+
+      <!-- Price -->
+      <p class="price-neutral mb-3">
+        ₹ {{ product.price }}
+      </p>
+
+      <!-- Description -->
+      <p class="description-neutral">
+        {{ product.description || 'No description available.' }}
+      </p>
+
+      <!-- Divider -->
+      <hr />
+
+      <!-- Extra Info -->
+      <div class="info-grid">
+        <div>
+          <span class="label">SKU</span>
+          <span class="value">{{ product.sku || '-' }}</span>
+        </div>
+        <div>
+          <span class="label">Stock</span>
+          <span class="value">{{ product.stockQuantity }}</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

@@ -24,7 +24,7 @@ export class UserListComponent implements OnInit {
         next: (data: User[]) => {
           this.users = data.map(u => ({
             ...u,
-            imageUrl: u.imagePath ? `http://localhost:5237/${u.imagePath}` : null
+            imageUrl: u.imagePath ? `http://localhost:5259/${u.imagePath}` : null
           }) as any);
           this.loading = false;
         },
@@ -40,7 +40,7 @@ export class UserListComponent implements OnInit {
   }
 
   getImageUrl(user: User): string | null {
-    return user.imagePath ? `http://localhost:5237/${user.imagePath}` : null;
+    return user.imagePath ? `http://localhost:5259/${user.imagePath}` : null;
   }
 
   toggleRestriction(user: User) {

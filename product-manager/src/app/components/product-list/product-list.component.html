@@ -176,8 +176,8 @@
 
   <!-- PRODUCT GRID -->
   <div *ngIf="products.length; else noProducts" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-    <div *ngFor="let p of filteredProducts" class="col">
-      <!-- <div *ngFor="let p of paginatedProducts" class="col"> -->
+    <!-- <div *ngFor="let p of filteredProducts" class="col"> -->
+      <div *ngFor="let p of paginatedProducts" class="col">
 
       
       <!-- <div class="card h-100 custom-card-width" [class.bg-light]="!p.isActive"> -->
@@ -206,7 +206,8 @@
        [src]="p.imageUrl"
        class="card-img-top"
        [alt]="p.name"
-       style="height: 180px; object-fit: cover;" />
+      style="height: 340px; object-fit: cover;"
+/>
 
   <!-- Wishlist Button -->
   <button 
@@ -258,6 +259,38 @@
       </div>
     </div>
   </div>
+  <nav
+  *ngIf="filteredProducts.length > itemsPerPage"
+  class="d-flex justify-content-center mt-5"
+>
+  <ul class="pagination pagination-lg shadow-sm rounded-pill bg-white px-3 py-2 align-items-center">
+
+    <!-- Previous -->
+    <li class="page-item" [class.disabled]="currentPage === 1">
+      <button class="page-link rounded-pill px-4"
+              (click)="prevPage()">
+        ← Previous
+      </button>
+    </li>
+
+    <!-- Page Info -->
+    <li class="page-item mx-3">
+      <span class="page-info fw-semibold text-primary">
+        Page {{ currentPage }} of {{ totalPages }}
+      </span>
+    </li>
+
+    <!-- Next -->
+    <li class="page-item" [class.disabled]="currentPage === totalPages">
+      <button class="page-link rounded-pill px-4"
+              (click)="nextPage()">
+        Next →
+      </button>
+    </li>
+
+  </ul>
+</nav>
+
 
   <!-- NO PRODUCTS TEMPLATE -->
   <ng-template #noProducts>

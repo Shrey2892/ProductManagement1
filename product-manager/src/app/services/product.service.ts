@@ -4,7 +4,7 @@ import { Product } from '../models/product';
 import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private baseUrl = ' http://localhost:5237/api/Products';
+  private baseUrl = ' http://localhost:5259/api/Products';
 
   constructor(private http: HttpClient) {}
 

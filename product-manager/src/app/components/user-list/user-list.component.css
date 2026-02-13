@@ -1,0 +1,70 @@
+/* Card container */
+.user-card {
+  border-radius: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Profile image */
+.user-card img {
+  border: 4px solid #f1f5f9 !important;
+}
+
+/* Username */
+.user-card h5 {
+  font-size: 1.15rem;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+/* Role badge – make it look like a tag, not a button */
+.user-card .badge.bg-primary {
+  background-color: #e0ecff !important;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Footer spacing */
+.user-card .card-footer {
+  padding-top: 16px;
+}
+
+/* Buttons */
+.user-card .btn {
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Restrict button */
+.user-card .btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: none;
+}
+
+/* Approve button */
+.user-card .btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+}
+
+/* Approved badge */
+.user-card .badge.bg-success {
+  display: inline-block;
+  font-size: 0.8rem;
+  margin-top: 8px;
+  background-color: #dcfce7 !important;
+  color: #15803d;
+}
+
+/* Divider */
+.user-card hr {
+  margin: 12px 0;
+  opacity: 0.15;
+}

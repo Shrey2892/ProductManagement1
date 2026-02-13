@@ -7,7 +7,7 @@ import { Console } from 'console';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl = 'http://localhost:5237/api/Auth';
+  private baseUrl = ' http://localhost:5259/api/Auth';
   user?: User;
 
   constructor(private http: HttpClient) {}
@@ -93,9 +93,9 @@ approveUser(id: number, approve: boolean) {
 
 restrictUser(userId: number, restrict: boolean) {
   return this.http.put(
-    `${this.baseUrl}/restrict/${userId}`,
-    restrict,
-    this.getAuthHeaders()   // ✅ attach bearer token here
+    `${this.baseUrl}/restrict/${userId}?restrict=${restrict}`,  // ✅ Add query parameter
+    {},  // empty body since backend expects query param
+    this.getAuthHeaders()
   );
 }
 
