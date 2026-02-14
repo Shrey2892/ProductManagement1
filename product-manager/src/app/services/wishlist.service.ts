@@ -39,7 +39,8 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Product } from '../models/product';
 
 @Injectable({
@@ -47,8 +48,19 @@ import { Product } from '../models/product';
 })
 export class WishlistService {
   private apiUrl = 'http://localhost:5259/api/wishlist';
+  private wishlistCountSubject = new BehaviorSubject<number>(0);
+  public wishlistCount$ = this.wishlistCountSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // populate initial count
+    this.refreshCount();
+  }
+
+  // helper: refresh count from API
+  private refreshCount(): void {
+    this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() })
+      .subscribe({ next: items => this.wishlistCountSubject.next(items?.length || 0), error: () => this.wishlistCountSubject.next(0) });
+  }
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
@@ -58,7 +70,8 @@ export class WishlistService {
   }
 
   getWishlist(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
+    return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() })
+      .pipe(tap(items => this.wishlistCountSubject.next(items?.length || 0)));
   }
 
   addToWishlist(productId: number): Observable<any> {
@@ -66,14 +79,14 @@ export class WishlistService {
       this.apiUrl,
       { productId },
       { headers: this.getHeaders() }
-    );
+    ).pipe(tap(() => this.refreshCount()));
   }
 
   removeFromWishlist(productId: number): Observable<any> {
     return this.http.delete(
       `${this.apiUrl}/${productId}`,
       { headers: this.getHeaders() }
-    );
+    ).pipe(tap(() => this.refreshCount()));
   }
 
   isInWishlist(productId: number): Observable<{ isInWishlist: boolean }> {
@@ -87,6 +100,7 @@ export class WishlistService {
     return this.http.delete(
       `${this.apiUrl}/clear`,
       { headers: this.getHeaders() }
-    );
+    ).pipe(tap(() => this.refreshCount()));
   }
+
 }

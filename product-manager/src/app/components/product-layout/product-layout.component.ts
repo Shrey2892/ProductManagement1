@@ -61,21 +61,18 @@ export class ProductLayoutComponent implements OnInit {
     if (!this.user) return;
 
     // cart count
-    this.cartService.getCart().subscribe({
-      next: (items: any[]) => {
-        this.cartCount = items.reduce((sum, it) => sum + (it.quantity || 0), 0);
-      },
+    // cart count - subscribe to shared cart count observable so UI updates in real time
+    this.cartService.cartCount$.subscribe({
+      next: (count: number) => this.cartCount = count,
       error: (err) => {
         console.warn('Failed to load cart count', err);
         this.cartCount = 0;
       }
     });
 
-    // wishlist count
-    this.wishlistService.getWishlist().subscribe({
-      next: (items: any[]) => {
-        this.wishlistCount = items.length;
-      },
+    // wishlist count - subscribe to shared count observable so UI updates in real time
+    this.wishlistService.wishlistCount$.subscribe({
+      next: (count: number) => this.wishlistCount = count,
       error: (err) => {
         console.warn('Failed to load wishlist count', err);
         this.wishlistCount = 0;

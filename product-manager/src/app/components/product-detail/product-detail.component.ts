@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { WishlistService } from '../../services/wishlist.service';
+import { CartItemService } from '../../services/cartitem.service';
 import { Product } from '../../models/product';
 import { ProductLayoutComponent } from '../product-layout/product-layout.component';
 
@@ -27,7 +28,8 @@ export class ProductDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: ProductService,
-    private wishlistService: WishlistService
+    private wishlistService: WishlistService,
+    private cartService: CartItemService
   ) {}
 
   ngOnInit() {
@@ -45,8 +47,16 @@ export class ProductDetailComponent implements OnInit {
   }
 
   addToCart(): void {
-    // placeholder: integrate with cart service later
-    console.log('Add to cart:', this.product?.id ?? this.product?.name, 'quantity:', this.quantity);
+    if (!this.product || !this.product.id) return;
+    this.cartService.addToCart(this.product.id).subscribe({
+      next: () => {
+        // successful add — service will refresh shared cart count
+        console.log('Added to cart', this.product.id);
+      },
+      error: (err) => {
+        console.error('Failed to add to cart', err);
+      }
+    });
   }
 
   incrementQuantity(): void {
