@@ -107,7 +107,7 @@ export class ProductLayoutComponent implements OnInit {
       if (this.userService.isUser()) {
         Swal.fire({
           title: 'Are you sure?',
-          text: 'Do you really want to log out? Your wishlist data will be lost.',
+          text: 'Do you really want to log out?',
           icon: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',

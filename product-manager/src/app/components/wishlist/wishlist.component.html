@@ -4,8 +4,16 @@
 
   <div *ngIf="wishlist.length; else emptyWishlist" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
     <div *ngFor="let p of wishlist" class="col">
-      <div class="card h-100">
+      <div class="card h-100 position-relative"
+           [class.bg-light]="!p.isActive">
         <img *ngIf="p.imagePath" [src]="p.imagePath" class="card-img-top" [alt]="p.name" style="height: 180px; object-fit: cover;" />
+
+        <!-- Out of Stock Badge (same style as product-list) -->
+        <div *ngIf="!p.isActive"
+             class="position-absolute top-50 start-50 translate-middle bg-dark text-white px-3 py-1 rounded shadow">
+          Out of Stock
+        </div>
+
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ p.name }}</h5>
           <p class="card-text mb-1"><strong>Category:</strong> {{ p.category }}</p>
