@@ -1,80 +1,3 @@
-<!-- <app-product-layout></app-product-layout>
-<div class="container my-5">
-  <h2 class="mb-4 text-center fw-bold text-primary">
-    <i class="bi bi-cart3 me-2"></i> Your Cart
-  </h2>
-
-  
-  <div *ngIf="cartItemService.getCart().length === 0" class="alert alert-warning text-center fs-5">
-    <i class="bi bi-bag-x-fill me-2"></i> Your cart is empty.
-  </div>
-
-  
-  <div *ngFor="let item of cartItemService.getCart()" class="card mb-3 shadow-sm border-0 rounded-3">
-    <div class="row g-0 align-items-center p-3">
-
-      
-      <div class="col-md-1 d-flex justify-content-center align-items-center">
-        <input type="checkbox" 
-               [checked]="selectedItems.includes(item.product.id)" 
-               (change)="toggleSelection(item.product.id)">
-      </div>
-
-      
-      <div class="col-md-2 text-center">
-        <img [src]="item.product.imageUrl || 'https://via.placeholder.com/100'" 
-             class="img-fluid rounded" 
-             alt="{{ item.product.name }}">
-      </div>
-
-      
-      <div class="col-md-5">
-        <div class="card-body">
-          <h5 class="card-title mb-2 fw-bold">{{ item.product.name }}</h5>
-          <p class="card-text text-muted mb-2">
-            Price: {{ item.product.price | currency:'INR':'symbol':'1.0-0' }}
-          </p>
-          <p class="card-text fw-semibold mb-0 d-flex align-items-center">
-            Quantity: 
-            <button class="btn btn-sm btn-outline-secondary ms-3 me-2" 
-                    (click)="decreaseQuantity(item.product.id)">-</button>
-            <span class="px-2">{{ item.quantity }}</span>
-            <button class="btn btn-sm btn-outline-secondary ms-2" 
-                    (click)="increaseQuantity(item.product.id)">+</button>
-          </p>
-        </div>
-      </div>
-
-     
-      <div class="col-md-4 text-center d-flex flex-column align-items-center justify-content-center">
-        <h5 class="text-success mb-3 fw-bold">
-          {{ item.product.price * item.quantity | currency:'INR':'symbol':'1.0-0' }}
-        </h5>
-        <button class="btn btn-sm btn-outline-danger w-75 mb-1" 
-                (click)="remove(item.product.id)">
-          <i class="bi bi-trash me-1"></i> Remove
-        </button>
-      </div>
-    </div>
-  </div>
-
-  
-  <div *ngIf="cartService.getCart().length > 0" class="card shadow-sm border-0 rounded-3 mt-4">
-    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center">
-      <h4 class="mb-3 mb-md-0 fw-bold text-primary">
-        Total (All): {{ cartService.getTotalPrice() | currency:'INR':'symbol':'1.0-0' }}
-      </h4>
-      <h4 class="mb-3 mb-md-0 fw-bold text-success">
-        Selected: {{ getSelectedTotal() | currency:'INR':'symbol':'1.0-0' }}
-      </h4>
-      <button class="btn btn-primary btn-lg px-4" [disabled]="selectedItems.length === 0">
-        <i class="bi bi-credit-card me-2"></i> Checkout Selected
-      </button>
-    </div>
-  </div>
-</div> -->
-
-
 <app-product-layout></app-product-layout>
 <div class="container my-5">
   <h2 class="mb-4 text-center fw-bold text-primary">
@@ -82,26 +5,43 @@
   </h2>
 
   <!-- Empty Cart -->
-  <div *ngIf="cartItems.length === 0" class="alert alert-warning text-center fs-5">
-    
+  <div *ngIf="cartItems.length === 0 && !isLoading" class="alert alert-warning text-center fs-5">
     <i class="bi bi-bag-x-fill me-2"></i> Your cart is empty.
   </div>
 
-  <!-- Cart Items -->
-  <div *ngFor="let item of cartItems" class="card mb-3 shadow-sm border-0 rounded-3">
-     <div *ngIf="!item.product.isActive"
-       class="position-absolute top-50 start-50 translate-middle bg-dark text-white px-3 py-1 rounded shadow">
-    Out of Stock
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
   </div>
-    <!-- <div class="row g-0 align-items-center p-3"> -->
-      <div class="row g-0 align-items-center p-3" [class.opacity-50]="!item.product.isActive">
+
+  <!-- Cart Items -->
+  <div *ngFor="let item of cartItems" class="card mb-3 shadow-sm border-0 rounded-3 position-relative">
+    
+    <!-- Status Badge -->
+    <div *ngIf="!item.product.isActive"
+         class="position-absolute top-50 start-50 translate-middle bg-danger text-white px-3 py-1 rounded shadow"
+         style="z-index: 3;">
+      Product Unavailable
+    </div>
+    
+    <div *ngIf="item.product.isActive && item.product.stockQuantity === 0"
+         class="position-absolute top-50 start-50 translate-middle bg-dark text-white px-3 py-1 rounded shadow"
+         style="z-index: 3;">
+      Out of Stock
+    </div>
+
+    <div class="row g-0 align-items-center p-3" 
+         [class.opacity-50]="isProductUnavailable(item)"
+         [class.bg-light]="isProductUnavailable(item)">
 
       <!-- Checkbox -->
       <div class="col-md-1 d-flex justify-content-center align-items-center">
         <input type="checkbox" 
                [checked]="selectedItems.includes(item.product.id)" 
                (change)="toggleSelection(item.product.id)"
-               [disabled]="!item.product.isActive">
+               [disabled]="isProductUnavailable(item)">
       </div>
 
       <!-- Image -->
@@ -118,13 +58,24 @@
           <p class="card-text text-muted mb-2">
             Price: {{ item.product.price | currency:'INR':'symbol':'1.0-0' }}
           </p>
+          
+          <!-- Status Warning -->
+          <p *ngIf="!item.product.isActive" class="text-danger mb-2">
+            <small><i class="bi bi-exclamation-triangle"></i> This product is no longer available</small>
+          </p>
+          <p *ngIf="item.product.isActive && item.product.stockQuantity === 0" class="text-warning mb-2">
+            <small><i class="bi bi-exclamation-circle"></i> Currently out of stock</small>
+          </p>
+          
           <p class="card-text fw-semibold mb-0 d-flex align-items-center">
             Quantity: 
             <button class="btn btn-sm btn-outline-secondary ms-3 me-2" 
-                    (click)="decreaseQuantity(item.product.id)">-</button>
+                    (click)="decreaseQuantity(item.product.id)" 
+                    [disabled]="isProductUnavailable(item)">-</button>
             <span class="px-2">{{ item.quantity }}</span>
             <button class="btn btn-sm btn-outline-secondary ms-2" 
-                    (click)="increaseQuantity(item.product.id)">+</button>
+                    (click)="increaseQuantity(item.product.id)" 
+                    [disabled]="isProductUnavailable(item)">+</button>
           </p>
         </div>
       </div>
@@ -151,21 +102,17 @@
       <h4 class="mb-3 mb-md-0 fw-bold text-success">
         Selected: {{ getSelectedTotal() | currency:'INR':'symbol':'1.0-0' }}
       </h4>
-      <!-- <button class="btn btn-primary btn-lg px-4" [disabled]="selectedItems.length === 0">
-        <i class="bi bi-credit-card me-2"></i> Checkout Selected
-      </button> -->
-
+      
       <button class="btn btn-primary btn-lg px-4"
-        [disabled]="selectedItems.length === 0 || checkoutInProgress"
-        (click)="checkoutSelected()">
-  <span *ngIf="!checkoutInProgress">
-    <i class="bi bi-credit-card me-2"></i> Checkout Selected
-  </span>
-  <span *ngIf="checkoutInProgress">
-    <span class="spinner-border spinner-border-sm me-2"></span> Processing...
-  </span>
-</button>
-
+              [disabled]="selectedItems.length === 0 || checkoutInProgress"
+              (click)="checkoutSelected()">
+        <span *ngIf="!checkoutInProgress">
+          <i class="bi bi-credit-card me-2"></i> Checkout Selected
+        </span>
+        <span *ngIf="checkoutInProgress">
+          <span class="spinner-border spinner-border-sm me-2"></span> Processing...
+        </span>
+      </button>
     </div>
   </div>
 </div>

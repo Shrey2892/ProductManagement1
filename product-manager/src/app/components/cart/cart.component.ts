@@ -1,56 +1,9 @@
-// import { Component } from '@angular/core';
-// import { CartService } from '../../services/cart.service';
-// import { CommonModule } from '@angular/common';
-// import { ProductLayoutComponent } from '../product-layout/product-layout.component';
-
-// @Component({
-//   selector: 'app-cart',
-//   standalone:true,
-//   imports:[CommonModule, ProductLayoutComponent],
-//   templateUrl:'./cart.component.html' 
-// })
-// export class CartComponent {
-//   selectedItems: number[] = [];  
-
-//   constructor(public cartService: CartService) {}
-
-//   remove(id: number) {
-//     this.cartService.removeFromCart(id);
-//     this.selectedItems = this.selectedItems.filter(x => x !== id); 
-//   }
-
-//   increaseQuantity(productId: number) {
-//     this.cartService.increaseQuantity(productId);
-//   }
-
-//   decreaseQuantity(productId: number) {
-//     this.cartService.decreaseQuantity(productId);
-//   }
-
-//   toggleSelection(productId: number) {
-//     if (this.selectedItems.includes(productId)) {
-//       this.selectedItems = this.selectedItems.filter(x => x !== productId);
-//     } else {
-//       this.selectedItems.push(productId);
-//     }
-//   }
-
-//   getSelectedTotal() {
-//     return this.cartService.getCart()
-//       .filter(item => this.selectedItems.includes(item.product.id))
-//       .reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
-//   }
-// }
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartItemService } from '../../services/cartitem.service';
 import { ProductLayoutComponent } from '../product-layout/product-layout.component';
 import { CartItem } from '../../models/CartItem';
 import Swal from 'sweetalert2';
-
 
 @Component({
   selector: 'app-cart',
@@ -61,7 +14,7 @@ import Swal from 'sweetalert2';
 export class CartComponent implements OnInit {
   checkoutInProgress = false;
   cartItems: CartItem[] = [];
-  selectedItems: number[] = [];  // store selected product IDs
+  selectedItems: number[] = [];
   isLoading = true;
 
   constructor(private cartItemService: CartItemService) {}
@@ -75,6 +28,11 @@ export class CartComponent implements OnInit {
     this.cartItemService.getCart().subscribe({
       next: (items) => {
         this.cartItems = items;
+        // ✅ Remove inactive products from selection
+        this.selectedItems = this.selectedItems.filter(id => {
+          const item = items.find(i => i.productId === id);
+          return item && item.product.isActive;
+        });
         this.isLoading = false;
       },
       error: (err) => {
@@ -89,26 +47,109 @@ export class CartComponent implements OnInit {
       next: () => {
         this.cartItems = this.cartItems.filter(item => item.productId !== productId);
         this.selectedItems = this.selectedItems.filter(id => id !== productId);
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Removed',
+          text: 'Item removed from cart.',
+          timer: 1500,
+          showConfirmButton: false
+        });
       },
-      error: (err) => console.error('Failed to remove from cart', err)
+      error: (err) => {
+        console.error('Failed to remove from cart', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to remove item from cart.'
+        });
+      }
     });
   }
 
   increaseQuantity(productId: number) {
+    const item = this.cartItems.find(i => i.productId === productId);
+    
+    // ✅ Check if product is inactive
+    if (item && !item.product.isActive) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Product Unavailable',
+        text: 'This product is no longer available.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
+    // ✅ Check if out of stock
+    if (item && item.product.stockQuantity === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Out of Stock',
+        text: 'This product is currently out of stock.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
     this.cartItemService.increaseQuantity(productId).subscribe({
       next: () => this.loadCart(),
-      error: (err) => console.error('Failed to increase quantity', err)
+      error: (err) => {
+        console.error('Failed to increase quantity', err);
+        const errorMsg = err.error?.message || 'Failed to update quantity';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMsg
+        });
+      }
     });
   }
 
   decreaseQuantity(productId: number) {
+    const item = this.cartItems.find(i => i.productId === productId);
+    
+    // ✅ Check if product is inactive
+    if (item && !item.product.isActive) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Product Unavailable',
+        text: 'This product is no longer available.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
     this.cartItemService.decreaseQuantity(productId).subscribe({
       next: () => this.loadCart(),
-      error: (err) => console.error('Failed to decrease quantity', err)
+      error: (err) => {
+        console.error('Failed to decrease quantity', err);
+        const errorMsg = err.error?.message || 'Failed to update quantity';
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMsg
+        });
+      }
     });
   }
 
   toggleSelection(productId: number) {
+    const item = this.cartItems.find(i => i.productId === productId);
+    
+    // ✅ Prevent selection of inactive or out-of-stock products
+    if (item && (!item.product.isActive || item.product.stockQuantity === 0)) {
+      Swal.fire({
+        icon: 'warning',
+        title: item.product.isActive ? 'Out of Stock' : 'Product Unavailable',
+        text: item.product.isActive 
+          ? 'This product is currently out of stock and cannot be selected for checkout.' 
+          : 'This product is no longer available and cannot be selected for checkout.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
     if (this.selectedItems.includes(productId)) {
       this.selectedItems = this.selectedItems.filter(x => x !== productId);
     } else {
@@ -126,161 +167,69 @@ export class CartComponent implements OnInit {
     return this.cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
   }
 
-
-
-
-
-
-
-
-
-
-// checkoutSelected() {
-//   if (this.selectedItems.length === 0) return;
-
-//   this.checkoutInProgress = true;
-
-//   // Keep unselected items aside
-//   const unselectedItems = this.cartItems.filter(
-//     item => !this.selectedItems.includes(item.productId)
-//   );
-
-//   // Temporarily set cart to only selected items
-//   this.cartItems = this.cartItems.filter(item =>
-//     this.selectedItems.includes(item.productId)
-//   );
-
-//   this.cartItemService.checkout().subscribe({
-//     next: () => {
-//       Swal.fire({
-//         title: 'Checkout Successful!',
-//         text: 'Your selected items have been checked out successfully.',
-//         icon: 'success',
-//         confirmButtonText: 'OK',
-//         confirmButtonColor: '#3085d6'
-//       }).then(() => {
-//         // After checkout, restore unselected items
-//         this.cartItems = unselectedItems;
-//         this.selectedItems = [];
-//         this.checkoutInProgress = false;
-//       });
-//     },
-//     error: (err) => {
-//       const errorMsg = err.error?.message || err.error || 'Unknown error';
-//       Swal.fire({
-//         title: 'Checkout Failed',
-//         text: errorMsg,
-//         icon: 'error',
-//         confirmButtonText: 'OK',
-//         confirmButtonColor: '#d33'
-//       });
-//       this.checkoutInProgress = false;
-//     }
-//   });
-// }
-
-
-
-
-
-
-
-// checkoutSelected() {
-//   if (this.selectedItems.length === 0) return;
-
-//   this.checkoutInProgress = true;
-
-//   // Keep a copy of unselected items
-//   const unselectedItems = this.cartItems.filter(
-//     item => !this.selectedItems.includes(item.productId)
-//   );
-
-//   // Temporarily set cart to only selected items (so backend checks them out)
-//   const originalCart = [...this.cartItems];
-//   this.cartItems = this.cartItems.filter(item =>
-//     this.selectedItems.includes(item.productId)
-//   );
-
-//   this.cartItemService.checkout().subscribe({
-//     next: () => {
-//       Swal.fire({
-//         title: 'Checkout Successful!',
-//         text: 'Your selected items have been checked out successfully.',
-//         icon: 'success',
-//         confirmButtonText: 'OK',
-//         confirmButtonColor: '#3085d6'
-//       }).then(() => {
-//         // Restore cart to only unselected items
-//         this.cartItems = unselectedItems;
-//         this.selectedItems = [];
-//         this.checkoutInProgress = false;
-//       });
-//     },
-//     error: (err) => {
-//       // Restore full cart if checkout fails
-//       this.cartItems = originalCart;
-
-//       const errorMsg = err.error?.message || err.error || 'Unknown error';
-//       Swal.fire({
-//         title: 'Checkout Failed',
-//         text: errorMsg,
-//         icon: 'error',
-//         confirmButtonText: 'OK',
-//         confirmButtonColor: '#d33'
-//       });
-//       this.checkoutInProgress = false;
-//     }
-//   });
-// }
-
-// cart.component.ts
-checkoutSelected() {
-  if (this.selectedItems.length === 0) {
-    Swal.fire({
-      title: 'No Items Selected',
-      text: 'Please select items to checkout.',
-      icon: 'warning',
-      confirmButtonText: 'OK'
-    });
-    return;
+  // ✅ Helper method to check if product is unavailable
+  isProductUnavailable(item: CartItem): boolean {
+    return !item.product.isActive || item.product.stockQuantity === 0;
   }
 
-  this.checkoutInProgress = true;
-
-  // Don't modify cartItems array, just send selected IDs to backend
-  this.cartItemService.checkoutSelected(this.selectedItems).subscribe({
-    next: () => {
+  checkoutSelected() {
+    if (this.selectedItems.length === 0) {
       Swal.fire({
-        title: 'Checkout Successful!',
-        text: 'Your selected items have been checked out successfully.',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#3085d6'
-      }).then(() => {
-        // Remove only the selected items from the cart
-        this.cartItems = this.cartItems.filter(
-          item => !this.selectedItems.includes(item.productId)
-        );
-        this.selectedItems = [];
-        this.checkoutInProgress = false;
+        title: 'No Items Selected',
+        text: 'Please select items to checkout.',
+        icon: 'warning',
+        confirmButtonText: 'OK'
       });
-    },
-    error: (err) => {
-      const errorMsg = err.error?.message || err.error || 'Unknown error';
+      return;
+    }
+
+    // ✅ Check if any selected items are inactive or out of stock
+    const unavailableItems = this.cartItems.filter(item => 
+      this.selectedItems.includes(item.productId) && 
+      (!item.product.isActive || item.product.stockQuantity === 0)
+    );
+
+    if (unavailableItems.length > 0) {
+      const itemNames = unavailableItems.map(i => i.product.name).join(', ');
       Swal.fire({
-        title: 'Checkout Failed',
-        text: errorMsg,
+        title: 'Unable to Checkout',
+        text: `The following items are unavailable or out of stock: ${itemNames}. Please remove them from your selection.`,
         icon: 'error',
         confirmButtonText: 'OK',
         confirmButtonColor: '#d33'
       });
-      this.checkoutInProgress = false;
+      return;
     }
-  });
-}
 
+    this.checkoutInProgress = true;
 
-
-
-
+    this.cartItemService.checkoutSelected(this.selectedItems).subscribe({
+      next: () => {
+        Swal.fire({
+          title: 'Checkout Successful!',
+          text: 'Your selected items have been checked out successfully.',
+          icon: 'success',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#3085d6'
+        }).then(() => {
+          this.cartItems = this.cartItems.filter(
+            item => !this.selectedItems.includes(item.productId)
+          );
+          this.selectedItems = [];
+          this.checkoutInProgress = false;
+        });
+      },
+      error: (err) => {
+        const errorMsg = err.error?.message || err.error || 'Unknown error';
+        Swal.fire({
+          title: 'Checkout Failed',
+          text: errorMsg,
+          icon: 'error',
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#d33'
+        });
+        this.checkoutInProgress = false;
+      }
+    });
+  }
 }
