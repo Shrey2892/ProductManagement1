@@ -29,8 +29,8 @@
         <div class="image-section">
           <div class="main-image-wrapper">
             <img [src]="product.imageUrl" [alt]="product.name" class="main-product-image" />
-            <span class="stock-badge" [ngClass]="product.isActive ? 'in-stock' : 'out-of-stock'">
-              {{ product.isActive ? 'In Stock' : 'Out of Stock' }}
+            <span class="stock-badge" [ngClass]="product.stockQuantity > 0 ? 'in-stock' : 'out-of-stock'">
+              {{ product.stockQuantity > 0 ? 'In Stock' : 'Out of Stock' }}
             </span>
           </div>
           
@@ -151,13 +151,13 @@
           <!-- Quantity & Actions -->
           <div class="purchase-controls">
             <div class="quantity-selector">
-              <button class="qty-btn" (click)="decrementQuantity()" [disabled]="quantity<=1">
+              <button class="qty-btn" (click)="decrementQuantity()" [disabled]="quantity<=1 || product.stockQuantity === 0">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
               </button>
-              <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stockQuantity" class="qty-input" />
-              <button class="qty-btn" (click)="incrementQuantity()" [disabled]="quantity>=product.stockQuantity">
+              <input type="number" [(ngModel)]="quantity" min="1" [max]="product.stockQuantity" class="qty-input" [disabled]="product.stockQuantity === 0" />
+              <button class="qty-btn" (click)="incrementQuantity()" [disabled]="quantity>=product.stockQuantity || product.stockQuantity === 0">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                 </svg>
@@ -165,7 +165,7 @@
             </div>
 
             <div class="action-buttons">
-              <button class="btn-add-cart" (click)="addToCart()">
+              <button class="btn-add-cart" (click)="addToCart()" [disabled]="product.stockQuantity === 0">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <path d="M9 2L7.17 4M15 2l1.83 2M3.5 9.09h17M6.5 20h11c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2h-11c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>

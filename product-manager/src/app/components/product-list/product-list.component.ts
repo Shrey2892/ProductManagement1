@@ -248,15 +248,15 @@ export class ProductListComponent implements OnInit {
   ngOnInit() {
     this.service.getAll().subscribe((data) => {
       this.products = data;
-      this.filteredProducts = data;
-      this.currentPage = 1;
-      this.updatePagination();
+      this.refreshFilteredProducts();
     });
 
     this.userService.getProfile().subscribe({
       next: (profile) => {
         this.user = profile;
         console.log('Loaded user profile →', this.user);
+        // Re-apply filtering after user info is available (so Admins see all)
+        this.refreshFilteredProducts();
       },
       error: (err) => console.error('Failed to load user profile', err)
     });
@@ -361,14 +361,23 @@ export class ProductListComponent implements OnInit {
 
   onSearch() {
     const query = this.searchQuery.trim().toLowerCase();
-    if (!query) {
-      this.filteredProducts = this.products;
-    } else {
-      this.filteredProducts = this.products.filter(p =>
-        (p.category && p.category.toLowerCase().includes(query)) ||
-        (p.name && p.name.toLowerCase().includes(query))
+    this.refreshFilteredProducts(query);
+  }
+
+  // Apply product visibility rules and optional search query
+  refreshFilteredProducts(query?: string) {
+    const q = query?.trim().toLowerCase();
+    // Base set: Admins see all products, regular users see only active ones
+    let base = this.products.filter(p => this.isAdmin ? true : p.isActive);
+
+    if (q) {
+      base = base.filter(p =>
+        (p.category && p.category.toLowerCase().includes(q)) ||
+        (p.name && p.name.toLowerCase().includes(q))
       );
     }
+
+    this.filteredProducts = base;
     this.currentPage = 1;
     this.updatePagination();
   }
