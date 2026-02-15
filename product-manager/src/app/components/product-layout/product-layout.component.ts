@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Product } from '../../models/product';
 import { User } from '../../models/User';
 import { ProductService } from '../../services/product.service';
@@ -12,11 +13,11 @@ import Swal from 'sweetalert2';
 import { FooterComponent } from '../footer/footer.component';
 @Component({
   selector: 'app-product-layout',
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, FormsModule, RouterOutlet, RouterLink],
   templateUrl: './product-layout.component.html',
   styleUrl: './product-layout.component.css'
 })
-export class ProductLayoutComponent {
+export class ProductLayoutComponent implements OnInit {
    currentYear: number = new Date().getFullYear();
   searchQuery = '';
     filteredProducts: Product[] = [];
@@ -24,6 +25,16 @@ export class ProductLayoutComponent {
     
      user?: User;
     backendBaseUrl = 'http://localhost:5259/'; 
+    cartCount: number = 0;
+    wishlistCount: number = 0;
+
+    get isAdmin(): boolean {
+      return this.user?.role === 'Admin';
+    }
+
+    get isUser(): boolean {
+      return this.user?.role === 'User';
+    }
     constructor(
     private service: ProductService,
     private router: Router,
@@ -37,6 +48,7 @@ export class ProductLayoutComponent {
   this.userService.getProfile().subscribe({
     next: (res: User) => {
       this.user = res;   // now user gets the actual object
+      this.loadCounts();
     },
     error: (err) => {
       console.error('Error fetching user profile', err);
@@ -44,6 +56,29 @@ export class ProductLayoutComponent {
     }
   });
 }
+
+  private loadCounts(): void {
+    if (!this.user) return;
+
+    // cart count
+    // cart count - subscribe to shared cart count observable so UI updates in real time
+    this.cartService.cartCount$.subscribe({
+      next: (count: number) => this.cartCount = count,
+      error: (err) => {
+        console.warn('Failed to load cart count', err);
+        this.cartCount = 0;
+      }
+    });
+
+    // wishlist count - subscribe to shared count observable so UI updates in real time
+    this.wishlistService.wishlistCount$.subscribe({
+      next: (count: number) => this.wishlistCount = count,
+      error: (err) => {
+        console.warn('Failed to load wishlist count', err);
+        this.wishlistCount = 0;
+      }
+    });
+  }
 
 
 
@@ -83,8 +118,9 @@ export class ProductLayoutComponent {
           if (result.isConfirmed) {
             
             this.userService.logout();
-            this.cartService.clearCart(); 
-            this.wishlistService.clearWishlist();
+            // clear server-side cart and wishlist; subscribe to ensure requests are sent
+            this.cartService.clearCart().subscribe({next:()=>{}, error:()=>{}});
+            this.wishlistService.clearWishlist().subscribe({next:()=>{}, error:()=>{}});
             Swal.fire('Logged out!', 'You have been logged out successfully.', 'success');
             this.router.navigate(['login']);
           }
