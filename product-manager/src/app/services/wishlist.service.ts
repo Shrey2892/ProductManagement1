@@ -42,12 +42,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Product } from '../models/product';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WishlistService {
-  private apiUrl = 'http://localhost:5259/api/wishlist';
+  private apiUrl = `${environment.apiBaseUrl}/api/wishlist`;
   private wishlistCountSubject = new BehaviorSubject<number>(0);
   public wishlistCount$ = this.wishlistCountSubject.asObservable();
 

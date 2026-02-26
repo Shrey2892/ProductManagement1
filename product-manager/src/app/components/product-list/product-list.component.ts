@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { WishlistService } from '../../services/wishlist.service';
 import { CartItemService } from '../../services/cartitem.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-list',
@@ -34,7 +35,7 @@ export class ProductListComponent implements OnInit {
   selectedCategory: string = 'All';
   allCategories: string[] = [];
 
-  backendBaseUrl = 'http://localhost:5259/';
+  backendBaseUrl = environment.apiBaseUrl;
 
   // ✅ Master category map (source of truth for all possible categories)
   private readonly allPossibleCategories: string[] = [
@@ -87,7 +88,7 @@ export class ProductListComponent implements OnInit {
 
   get avatarUrl(): string | null {
     if (!this.user || !this.user.imagePath) return null;
-    return this.backendBaseUrl + this.user.imagePath;
+    return `${this.backendBaseUrl}/${this.user.imagePath}`;
   }
 
   logout() {

@@ -1,0 +1,227 @@
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">Shop<span>Wave</span></a>
+    <ul class="nav-links">
+      <li><a href="#categories">Categories</a></li>
+      <li><a href="#deals">Deals</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#app">App</a></li>
+    </ul>
+    <div class="nav-btns">
+      <a class="btn-ghost" routerLink="/login">Sign In</a>
+      <a class="btn-primary" routerLink="/register">Get Started Free</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-pill">
+        <div class="pill-dot">🔥</div>
+        Over 5 crore products. Delivered fast.
+      </div>
+      <h1 class="hero-title">
+        Everything You Need,<br /><span class="hl">Delivered to You</span>
+      </h1>
+      <p class="hero-desc">
+        Shop from millions of products across electronics, fashion, grocery, and more.
+        Lowest prices guaranteed, with free delivery on every order above Rs 499.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-hero btn-hero-blue" (click)="showToast('Exploring deals')">Start Shopping</button>
+        <button class="btn-hero btn-hero-outline" (click)="showToast('Become a seller today')">Sell on ShopWave</button>
+      </div>
+      <div class="hero-trust">
+        <div class="trust-avatars">
+          <div class="ta">😊</div>
+          <div class="ta">🙂</div>
+          <div class="ta">😄</div>
+          <div class="ta">😁</div>
+        </div>
+        <div class="trust-text"><strong>4.8 rated</strong> by over 1.2 crore happy customers</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="ps-header">
+            <div class="ps-greeting">Good morning, Priya</div>
+            <div class="ps-title">What are you shopping for?</div>
+            <div class="ps-search">Search products, brands...</div>
+          </div>
+          <div class="ps-offers">
+            <div class="ps-offer pso1"><div class="emo">📱</div><div class="off">Mobiles Up to 40% off</div></div>
+            <div class="ps-offer pso2"><div class="emo">👗</div><div class="off">Fashion Flat Rs 300 off</div></div>
+          </div>
+          <div class="ps-items">
+            <div class="ps-item"><div class="psi-img">🎧</div><div><div class="psi-name">Bluetooth Earbuds</div><div class="psi-price">Rs 1,299</div></div></div>
+            <div class="ps-item"><div class="psi-img">⌚</div><div><div class="psi-name">Smart Watch Pro</div><div class="psi-price">Rs 2,499</div></div></div>
+            <div class="ps-item"><div class="psi-img">👟</div><div><div class="psi-name">Running Shoes</div><div class="psi-price">Rs 799</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="float-card fc1">
+        <div class="fc-icon">🚚</div>
+        <div><div class="fc-val">Free Delivery</div><div class="fc-sub">On orders above Rs 499</div></div>
+      </div>
+      <div class="float-card fc2">
+        <div class="fc-icon">🔒</div>
+        <div><div class="fc-val">Secure Payments</div><div class="fc-sub">100% buyer protection</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat"><div class="stat-icon">🛍️</div><div><div class="stat-num">5 Cr+</div><div class="stat-label">Products Listed</div></div></div>
+    <div class="stat"><div class="stat-icon">😊</div><div><div class="stat-num">1.2 Cr+</div><div class="stat-label">Happy Customers</div></div></div>
+    <div class="stat"><div class="stat-icon">🏪</div><div><div class="stat-num">8 Lakh+</div><div class="stat-label">Verified Sellers</div></div></div>
+    <div class="stat"><div class="stat-icon">📦</div><div><div class="stat-num">24 Hrs</div><div class="stat-label">Average Delivery</div></div></div>
+  </div>
+</div>
+
+<section class="section" id="categories">
+  <div class="section-inner">
+    <span class="sec-label">Browse Categories</span>
+    <h2 class="sec-title">Shop by Category</h2>
+    <p class="sec-sub">From the latest gadgets to everyday essentials find everything in one place.</p>
+    <div class="cat-row">
+      <div class="cat-card" (click)="showToast('Browsing Mobiles')"><div class="cc-icon">📱</div><div class="cc-name">Mobiles</div></div>
+      <div class="cat-card" (click)="showToast('Browsing Fashion')"><div class="cc-icon">👗</div><div class="cc-name">Fashion</div></div>
+      <div class="cat-card" (click)="showToast('Browsing Electronics')"><div class="cc-icon">💻</div><div class="cc-name">Electronics</div></div>
+      <div class="cat-card" (click)="showToast('Browsing Home & Kitchen')"><div class="cc-icon">🏠</div><div class="cc-name">Home</div></div>
+      <div class="cat-card" (click)="showToast('Browsing Grocery')"><div class="cc-icon">🛒</div><div class="cc-name">Grocery</div></div>
+      <div class="cat-card" (click)="showToast('Browsing Beauty')"><div class="cc-icon">💄</div><div class="cc-name">Beauty</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="deals-section" id="deals">
+  <div class="deals-inner">
+    <div class="deals-header">
+      <div>
+        <span class="sec-label">Limited Time</span>
+        <h2 class="sec-title">Today's Best Deals</h2>
+      </div>
+      <button class="btn-ghost" (click)="showToast('Viewing all deals')">View All Deals →</button>
+    </div>
+    <div class="deals-row">
+      <div class="deal-tile">
+        <div class="dt-head dt-h1"><div class="dt-emoji">🎧</div></div>
+        <div class="dt-body">
+          <div class="dt-cat">Electronics</div>
+          <div class="dt-name">Noise Cancelling Earbuds Pro</div>
+          <div class="dt-price-row">
+            <div class="dt-price">₹1,499</div>
+            <div class="dt-mrp">₹4,999</div>
+            <div class="dt-off">70% off</div>
+          </div>
+          <div class="dt-bar"><div class="dt-fill" style="width:82%"></div></div>
+          <div class="dt-left">Only 240 left</div>
+          <button class="dt-btn" (click)="showToast('Added to cart')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="deal-tile">
+        <div class="dt-head dt-h2"><div class="dt-emoji">👟</div></div>
+        <div class="dt-body">
+          <div class="dt-cat">Footwear</div>
+          <div class="dt-name">Nike Air Max 270 Running Shoes</div>
+          <div class="dt-price-row">
+            <div class="dt-price">₹3,999</div>
+            <div class="dt-mrp">₹8,995</div>
+            <div class="dt-off">56% off</div>
+          </div>
+          <div class="dt-bar"><div class="dt-fill" style="width:60%"></div></div>
+          <div class="dt-left">Only 95 left</div>
+          <button class="dt-btn" (click)="showToast('Added to cart')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="deal-tile">
+        <div class="dt-head dt-h3"><div class="dt-emoji">⌚</div></div>
+        <div class="dt-body">
+          <div class="dt-cat">Wearables</div>
+          <div class="dt-name">Smart Watch with Health Monitor</div>
+          <div class="dt-price-row">
+            <div class="dt-price">₹2,299</div>
+            <div class="dt-mrp">₹5,999</div>
+            <div class="dt-off">62% off</div>
+          </div>
+          <div class="dt-bar"><div class="dt-fill" style="width:45%"></div></div>
+          <div class="dt-left">412 left</div>
+          <button class="dt-btn" (click)="showToast('Added to cart')">Add to Cart</button>
+        </div>
+      </div>
+      <div class="deal-tile">
+        <div class="dt-head dt-h4"><div class="dt-emoji">💄</div></div>
+        <div class="dt-body">
+          <div class="dt-cat">Beauty</div>
+          <div class="dt-name">Lakme Absolute Foundation Kit</div>
+          <div class="dt-price-row">
+            <div class="dt-price">₹599</div>
+            <div class="dt-mrp">₹1,299</div>
+            <div class="dt-off">54% off</div>
+          </div>
+          <div class="dt-bar"><div class="dt-fill" style="width:90%"></div></div>
+          <div class="dt-left">Only 30 left!</div>
+          <button class="dt-btn" (click)="showToast('Added to cart')">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how-bg" id="how">
+  <div class="how-inner">
+    <span class="sec-label">Simple Steps</span>
+    <h2 class="sec-title">How ShopWave Works</h2>
+    <p class="sec-sub">Start shopping in minutes. It is simple, secure, and seamless.</p>
+    <div class="steps-row">
+      <div class="step-card"><div class="step-num">01</div><div class="step-title">Create Your Account</div></div>
+      <div class="step-card"><div class="step-num">02</div><div class="step-title">Search and Discover</div></div>
+      <div class="step-card"><div class="step-num">03</div><div class="step-title">Pay Securely</div></div>
+      <div class="step-card"><div class="step-num">04</div><div class="step-title">Get It Delivered</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="app-section" id="app">
+  <div class="app-inner">
+    <div class="app-text">
+      <span class="sec-label">Mobile App</span>
+      <h2 class="sec-title">Shop On The Go</h2>
+      <p>Download the ShopWave app for app only deals, faster checkout, and live tracking.</p>
+      <div class="app-btns">
+        <button class="app-btn" (click)="showToast('Redirecting to Play Store')">Google Play</button>
+        <button class="app-btn" (click)="showToast('Redirecting to App Store')">App Store</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="nl-inner">
+    <span class="sec-label">Stay Updated</span>
+    <h2 class="sec-title">Get Exclusive Deals in Your Inbox</h2>
+    <div class="nl-form">
+      <input class="nl-input" type="email" placeholder="Enter your email address" />
+      <button class="nl-btn" (click)="showToast('Subscribed successfully')">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-main">
+    <div class="footer-brand">
+      <span class="logo">Shop<span>Wave</span></span>
+      <p>Millions of products, millions of smiles delivered every day.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 ShopWave Pvt. Ltd. All rights reserved.</span>
+  </div>
+</footer>
+
+<div id="toast" [class.show]="toastVisible">{{ toastMessage }}</div>
