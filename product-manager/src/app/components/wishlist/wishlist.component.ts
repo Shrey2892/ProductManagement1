@@ -1,67 +1,3 @@
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { Router } from '@angular/router';
-// import { WishlistService } from '../../services/wishlist.service';
-// import { Product } from '../../models/product';
-// import { ProductLayoutComponent } from '../product-layout/product-layout.component';
-// import { CartItemService } from '../../services/cartitem.service';  // ✅ updated to use CartItemService
-// import Swal from 'sweetalert2';  // ✅ SweetAlert2
-
-// @Component({
-//   selector: 'app-wishlist',
-//   standalone: true,
-//   imports: [CommonModule, ProductLayoutComponent],
-//   templateUrl: './wishlist.component.html',
-//   styleUrls: ['./wishlist.component.css']
-// })
-// export class WishlistComponent implements OnInit {
-//   wishlist: Product[] = [];
-
-//   constructor(
-//     private wishlistService: WishlistService,
-//     private cartItemService: CartItemService,  // ✅ updated service
-//     private router: Router
-//   ) {}
-
-//   ngOnInit(): void {
-//     this.wishlist = this.wishlistService.getWishlist();
-//   }
-
-//   remove(productId: number) {
-//     this.wishlistService.removeFromWishlist(productId);
-//     this.wishlist = this.wishlistService.getWishlist();
-//   }
-
-//   addToCart(product: Product) {
-//     this.cartItemService.addToCart(product.id).subscribe({
-//       next: () => {
-//         this.remove(product.id);  // remove from wishlist on success
-
-//         Swal.fire({
-//           title: 'Added to Cart!',
-//           text: `${product.name} has been added to your cart.`,
-//           icon: 'success',
-//           confirmButtonText: 'Go to Cart',
-//           confirmButtonColor: '#28a745'
-//         }).then(() => {
-//           this.router.navigate(['/cart']);
-//         });
-//       },
-//       error: (err) => {
-//         const errorMsg = err.error?.message || err.message || 'Something went wrong.';
-//         Swal.fire({
-//           title: 'Failed to Add to Cart',
-//           text: errorMsg,
-//           icon: 'error',
-//           confirmButtonText: 'OK',
-//           confirmButtonColor: '#d33'
-//         });
-//         console.error('Add to cart failed:', err);
-//       }
-//     });
-//   }
-// }
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -78,7 +14,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./wishlist.component.css']
 })
 export class WishlistComponent implements OnInit {
-  wishlist: any[] = []; // ✅ Changed from Product[] to any[] to match API response
+  wishlist: any[] = [];
 
   constructor(
     private wishlistService: WishlistService,
@@ -90,7 +26,6 @@ export class WishlistComponent implements OnInit {
     this.loadWishlist();
   }
 
-  // ✅ Load wishlist from API
   loadWishlist() {
     this.wishlistService.getWishlist().subscribe({
       next: (items) => {
@@ -107,11 +42,10 @@ export class WishlistComponent implements OnInit {
     });
   }
 
-  // ✅ Updated to use productId from wishlist item
   remove(productId: number) {
     this.wishlistService.removeFromWishlist(productId).subscribe({
       next: () => {
-        this.loadWishlist(); // Reload wishlist after removal
+        this.loadWishlist();
         Swal.fire({
           icon: 'success',
           title: 'Removed',
@@ -131,11 +65,32 @@ export class WishlistComponent implements OnInit {
     });
   }
 
-  // ✅ Updated to use productId from wishlist item
   addToCart(item: any) {
+    // ✅ Check if product is inactive
+    if (!item.isActive) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Product Unavailable',
+        text: 'This product is no longer available.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
+    // ✅ Check if product is out of stock
+    if (item.stock === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Out of Stock',
+        text: 'This product is currently out of stock.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
     this.cartItemService.addToCart(item.productId).subscribe({
       next: () => {
-        this.remove(item.productId); // Remove from wishlist on success
+        this.remove(item.productId);
 
         Swal.fire({
           title: 'Added to Cart!',
@@ -159,5 +114,10 @@ export class WishlistComponent implements OnInit {
         console.error('Add to cart failed:', err);
       }
     });
+  }
+
+  // ✅ Helper method to check if product is unavailable
+  isProductUnavailable(item: any): boolean {
+    return !item.isActive || item.stock === 0;
   }
 }
