@@ -11,6 +11,7 @@ import { WishlistService } from '../../services/wishlist.service';
 import { CartItemService } from '../../services/cartitem.service';
 import Swal from 'sweetalert2';
 import { FooterComponent } from '../footer/footer.component';
+import { environment } from '../../../environments/environment';
 @Component({
   selector: 'app-product-layout',
   imports: [CommonModule, FormsModule, RouterOutlet, RouterLink],
@@ -24,7 +25,7 @@ export class ProductLayoutComponent implements OnInit {
     products: Product[] = [];
     
      user?: User;
-    backendBaseUrl = 'http://localhost:5259/'; 
+    backendBaseUrl = environment.apiBaseUrl;
     cartCount: number = 0;
     wishlistCount: number = 0;
 
@@ -96,7 +97,7 @@ export class ProductLayoutComponent implements OnInit {
 
   get avatarUrl(): string | null {
     if (!this.user || !this.user.imagePath) return null;
-    return this.backendBaseUrl + this.user.imagePath;
+    return `${this.backendBaseUrl}/${this.user.imagePath}`;
   }
 
   goToEditProfile() {

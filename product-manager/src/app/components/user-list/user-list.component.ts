@@ -3,6 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/User';
 import { CommonModule } from '@angular/common';
 import { ProductLayoutComponent } from '../product-layout/product-layout.component';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-user-list',
@@ -24,7 +25,7 @@ export class UserListComponent implements OnInit {
         next: (data: User[]) => {
           this.users = data.map(u => ({
             ...u,
-            imageUrl: u.imagePath ? `http://localhost:5259/${u.imagePath}` : null
+            imageUrl: u.imagePath ? `${environment.apiBaseUrl}/${u.imagePath}` : null
           }) as any);
           this.loading = false;
         },
@@ -40,7 +41,7 @@ export class UserListComponent implements OnInit {
   }
 
   getImageUrl(user: User): string | null {
-    return user.imagePath ? `http://localhost:5259/${user.imagePath}` : null;
+    return user.imagePath ? `${environment.apiBaseUrl}/${user.imagePath}` : null;
   }
 
   toggleRestriction(user: User) {

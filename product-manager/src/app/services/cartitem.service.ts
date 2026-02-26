@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 import { CartItem } from '../models/CartItem';
 
@@ -10,7 +11,7 @@ import { CartItem } from '../models/CartItem';
   providedIn: 'root'
 })
 export class CartItemService {
-  private apiUrl = 'http://localhost:5259/api/Cart'; // ✅ your cart controller base URL
+  private apiUrl = `${environment.apiBaseUrl}/api/Cart`; // your cart controller base URL
   private cartCountSubject = new BehaviorSubject<number>(0);
   public cartCount$ = this.cartCountSubject.asObservable();
 
@@ -33,7 +34,7 @@ export class CartItemService {
     };
   }
 
-   getCart(): Observable<CartItem[]> {
+  getCart(): Observable<CartItem[]> {
     return this.http.get<CartItem[]>(`${this.apiUrl}`, this.getAuthHeaders()).pipe(tap(items => this.cartCountSubject.next(items?.reduce((s, it) => s + (it.quantity || 0), 0) || 0)));
   }
 
@@ -46,19 +47,17 @@ export class CartItemService {
   //   return this.http.delete(`${this.apiUrl}/remove/${productId}`, this.getAuthHeaders());
   // }
 
-//   removeFromCart(productId: number) {
-//   return this.http.delete(`http://localhost:5237/api/Cart/remove/${productId}`, { responseType: 'text' });
-// }
+  // removeFromCart(productId: number) {
+  //   return this.http.delete(`${this.apiUrl}/remove/${productId}`, { responseType: 'text' });
+  // }
 
-removeFromCart(productId: number) {
-  const headers = this.getAuthHeaders().headers;  // extract headers from your existing method
-  return this.http.delete(
-    `http://localhost:5259/api/Cart/remove/${productId}`,
-    { headers, responseType: 'text' }
-  ).pipe(tap(() => this.refreshCount()));
-}
-
-
+  removeFromCart(productId: number) {
+    const headers = this.getAuthHeaders().headers;
+    return this.http.delete(
+      `${this.apiUrl}/remove/${productId}`,
+      { headers, responseType: 'text' }
+    ).pipe(tap(() => this.refreshCount()));
+  }
 
   // Replace with separate methods
   // increaseQuantity(productId: number): Observable<any> {
@@ -66,28 +65,26 @@ removeFromCart(productId: number) {
   // }
 
   increaseQuantity(productId: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/increase/${productId}`, {}, { 
+    return this.http.put(`${this.apiUrl}/increase/${productId}`, {}, {
       headers: new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('token')}` }),
-      responseType: 'text'  // tell Angular to expect plain text response
+      responseType: 'text'
     }).pipe(tap(() => this.refreshCount()));
-}
-
+  }
 
   // decreaseQuantity(productId: number): Observable<any> {
   //   return this.http.put(`${this.apiUrl}/decrease/${productId}`, {}, this.getAuthHeaders());
   // }
 
   decreaseQuantity(productId: number): Observable<any> {
-  return this.http.put(
-    `${this.apiUrl}/decrease/${productId}`,
-    {},
-    {
-      headers: new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('token')}` }),
-      responseType: 'text'
-    }
-  ).pipe(tap(() => this.refreshCount()));
-}
-
+    return this.http.put(
+      `${this.apiUrl}/decrease/${productId}`,
+      {},
+      {
+        headers: new HttpHeaders({ Authorization: `Bearer ${localStorage.getItem('token')}` }),
+        responseType: 'text'
+      }
+    ).pipe(tap(() => this.refreshCount()));
+  }
 
   // Add missing methods
   getTotalPrice(): Observable<number> {
@@ -98,30 +95,23 @@ removeFromCart(productId: number) {
     return this.http.delete(`${this.apiUrl}/clear`, this.getAuthHeaders()).pipe(tap(() => this.refreshCount()));
   }
 
-//   checkout(): Observable<any> {
-//   return this.http.post(`${this.apiUrl}/checkout`,this.getAuthHeaders()); // no user ID needed
-// }
+  // checkout(): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/checkout`, this.getAuthHeaders());
+  // }
 
-checkout(): Observable<any> {
-  return this.http.post(`${this.apiUrl}/checkout`, {}, this.getAuthHeaders());
+  checkout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/checkout`, {}, this.getAuthHeaders());
+  }
+
+  // checkoutSelected(productIds: number[]): Observable<any> {
+  //   return this.http.post(`${this.apiUrl}/checkout-selected`, productIds, this.getAuthHeaders());
+  // }
+  // cartitem.service.ts
+
+  checkoutSelected(productIds: number[]): Observable<any> {
+    // Wrap the array in an object with productIds property
+    const payload = { productIds: productIds };
+
+    return this.http.post(`${this.apiUrl}/checkout-selected`, payload);
+  }
 }
-
-
-// checkoutSelected(productIds: number[]): Observable<any> {
-//   return this.http.post(`${this.apiUrl}/checkout-selected`, productIds, this.getAuthHeaders());
-// }
-// cartitem.service.ts
-
-checkoutSelected(productIds: number[]): Observable<any> {
-  // Wrap the array in an object with productIds property
-  const payload = { productIds: productIds };
-  
-  return this.http.post(`${this.apiUrl}/checkout-selected`, payload);
-}
-
-
-
-}
-
-
-

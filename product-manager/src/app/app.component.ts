@@ -34,7 +34,7 @@ constructor(private router: Router) {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         // Hide footer on login and register pages
-        this.showFooter = !['/login', '/register','/forgot-password','/set-password'].includes(event.urlAfterRedirects);
+        this.showFooter = !['/', '/login', '/register', '/forgot-password', '/set-password'].includes(event.urlAfterRedirects);
       });
     }
 

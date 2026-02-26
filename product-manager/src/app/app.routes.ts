@@ -19,8 +19,10 @@ import { VerifyOtpComponent } from './components/verify-otp/verify-otp.component
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { SetPasswordComponent } from './components/set-password/set-password.component';
+import { LandingPageComponent } from './components/landing-page/landing-page.component';
 export const routes: Routes = [
 
+  { path: '', component: LandingPageComponent },
   { path: 'login', component: LoginComponent },
   
   { path: 'register', component: RegisterComponent },
@@ -32,11 +34,11 @@ export const routes: Routes = [
   { path: 'update-product/:id', component: ProductUpdateComponent ,canActivate: [AuthGuard,RoleGuard] },
   { path: 'delete-product/:id', component: ProductDeleteComponent,canActivate: [AuthGuard,RoleGuard]  },
   {path:'verify',component:VerifyOtpComponent},
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {path:'forgot-password',component:ForgotPasswordComponent},
    { path: 'users', component: UserListComponent, canActivate:[AuthGuard,RoleGuard] } ,
   {path:'not-allowed', component:NotAllowedComponent},
   {path:'wishlist', component:WishlistComponent},
   { path: 'add-user', component: AddUserComponent, canActivate:[RoleGuard] },
   { path: 'set-password', component: SetPasswordComponent },
+  { path: '**', redirectTo: '' }
 ];
